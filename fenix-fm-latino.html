@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FENIX FM Latino — En Vivo 24/7</title>
+<meta name="description" content="FENIX FM Latino, la radio que no se apaga. Escuchá en vivo, todo el día, toda la noche.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c0a09;
+    --ink-2:#1a1512;
+    --ember:#ff5a1f;
+    --ember-2:#ffab3d;
+    --coal:#c1121f;
+    --gold:#ffc857;
+    --chrome:#dfe3e6;
+    --cream:#f5ead9;
+    --ash:#8a7c6e;
+    --lcd-bg:#120e0b;
+    --lcd-line: rgba(255,200,87,0.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--cream);
+    font-family:'Manrope',sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--ember);color:var(--ink);}
+
+  /* background texture: slow ember glow */
+  .glow-field{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(600px 400px at 15% 10%, rgba(255,106,43,0.16), transparent 60%),
+      radial-gradient(700px 500px at 85% 30%, rgba(193,39,45,0.14), transparent 60%),
+      radial-gradient(500px 400px at 50% 100%, rgba(242,169,59,0.10), transparent 60%);
+  }
+  .grain{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  header, main, footer{ position:relative; z-index:2; }
+
+  /* NAV */
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 6%;
+  }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand img{
+    width:50px; height:50px; border-radius:50%; object-fit:cover;
+    box-shadow:0 0 0 2px rgba(255,200,87,.4), 0 0 16px rgba(255,90,31,.4);
+  }
+  .brand-name{
+    font-family:'Oswald', sans-serif; font-weight:600; letter-spacing:.06em;
+    font-size:1.05rem; text-transform:uppercase;
+  }
+  .brand-name span{ color:var(--ember-2); }
+  nav ul{ list-style:none; display:flex; gap:34px; }
+  nav a{
+    color:var(--cream); text-decoration:none; font-size:.85rem;
+    letter-spacing:.08em; text-transform:uppercase; opacity:.75;
+    transition:opacity .2s;
+  }
+  nav a:hover, nav a:focus-visible{ opacity:1; color:var(--ember-2); }
+
+  /* HERO */
+  .hero{
+    min-height:88vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:60px 6% 40px;
+  }
+  .eyebrow{
+    font-family:'Share Tech Mono', monospace;
+    color:var(--gold); font-size:.8rem; letter-spacing:.35em;
+    text-transform:uppercase; margin-bottom:22px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .live-dot{
+    width:8px; height:8px; border-radius:50%; background:var(--coal);
+    box-shadow:0 0 0 0 rgba(193,39,45,.7);
+    animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(255,106,43,.55); }
+    70%{ box-shadow:0 0 0 10px rgba(255,106,43,0); }
+    100%{ box-shadow:0 0 0 0 rgba(255,106,43,0); }
+  }
+
+  .logo-wrap{
+    position:relative; width:220px; height:220px; margin-bottom:22px;
+  }
+  .logo-wrap::before{
+    content:""; position:absolute; inset:-30px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,90,31,.45), rgba(255,90,31,0) 70%);
+    filter:blur(6px); animation:embers 3.2s ease-in-out infinite;
+  }
+  @keyframes embers{
+    0%,100%{ opacity:.6; transform:scale(1); }
+    50%{ opacity:1; transform:scale(1.06); }
+  }
+  .station-logo{
+    position:relative; width:220px; height:220px; border-radius:50%; object-fit:cover;
+    box-shadow:0 0 0 3px rgba(255,200,87,.4), 0 25px 70px rgba(255,90,31,.35);
+  }
+
+  h1{
+    font-family:'Oswald', sans-serif; font-weight:700;
+    font-size:clamp(2.2rem, 6.5vw, 4rem);
+    line-height:0.95; text-transform:uppercase; letter-spacing:.02em;
+    color:var(--chrome);
+  }
+  h1 .fm{
+    background:linear-gradient(180deg, var(--gold) 0%, var(--ember) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .tagline{
+    margin-top:16px; max-width:520px; color:var(--ash);
+    font-size:1.02rem; line-height:1.55;
+  }
+
+  /* PLAYER — retro tuner */
+  .tuner{
+    margin-top:46px;
+    width:min(560px, 92vw);
+    background:linear-gradient(180deg, #241a13, #171009);
+    border-radius:22px;
+    padding:22px 22px 18px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.05) inset,
+      0 30px 60px rgba(0,0,0,.5),
+      0 0 0 1px rgba(242,169,59,.12);
+  }
+  .lcd{
+    background:var(--lcd-bg);
+    border-radius:12px;
+    padding:16px 18px;
+    box-shadow:inset 0 0 22px rgba(0,0,0,.6), inset 0 0 0 1px rgba(242,169,59,.18);
+    text-align:left;
+    position:relative;
+    overflow:hidden;
+  }
+  .lcd::before{
+    content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(180deg, var(--lcd-line) 0px, var(--lcd-line) 1px, transparent 1px, transparent 3px);
+    pointer-events:none; opacity:.5;
+  }
+  .lcd-row{ display:flex; justify-content:space-between; align-items:center; font-family:'Share Tech Mono', monospace; }
+  .lcd-station{ color:var(--ember-2); font-size:.95rem; letter-spacing:.12em; }
+  .lcd-status{ color:var(--gold); font-size:.78rem; letter-spacing:.1em; }
+  .lcd-ticker{
+    margin-top:10px; height:20px; overflow:hidden; white-space:nowrap;
+    font-family:'Share Tech Mono', monospace; color:var(--cream); font-size:.85rem; letter-spacing:.06em;
+  }
+  .lcd-ticker span{
+    display:inline-block; padding-left:100%;
+    animation:ticker 14s linear infinite;
+  }
+  @keyframes ticker{ 0%{ transform:translateX(0);} 100%{ transform:translateX(-100%);} }
+
+  .bars{
+    margin-top:14px; height:46px; display:flex; align-items:flex-end; gap:3px;
+  }
+  .bars i{
+    flex:1; background:linear-gradient(180deg, var(--ember-2), var(--coal));
+    height:8%; border-radius:2px 2px 0 0;
+    transition:height .12s ease;
+  }
+
+  .controls{
+    display:flex; align-items:center; gap:18px; margin-top:20px; padding:0 4px;
+  }
+  .play-btn{
+    width:64px; height:64px; border-radius:50%; flex-shrink:0;
+    background:radial-gradient(circle at 35% 30%, var(--ember-2), var(--coal) 75%);
+    border:none; cursor:pointer;
+    box-shadow:0 8px 22px rgba(255,106,43,.35), 0 0 0 4px rgba(242,169,59,.12);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .15s ease;
+  }
+  .play-btn:hover{ transform:scale(1.05); }
+  .play-btn:active{ transform:scale(.96); }
+  .play-btn svg{ width:24px; height:24px; fill:var(--cream); }
+
+  .vol-wrap{ flex:1; display:flex; align-items:center; gap:10px; }
+  .vol-wrap label{ font-family:'Share Tech Mono', monospace; font-size:.72rem; color:var(--ash); letter-spacing:.1em; }
+  input[type=range]{
+    -webkit-appearance:none; width:100%; height:4px; border-radius:2px;
+    background:linear-gradient(90deg, var(--ember) 0%, var(--ember) 70%, #3a2e24 70%, #3a2e24 100%);
+    outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:15px; height:15px; border-radius:50%;
+    background:var(--gold); box-shadow:0 0 8px rgba(242,169,59,.7); cursor:pointer;
+  }
+
+  .hint{ margin-top:14px; font-size:.75rem; color:var(--ash); text-align:center; }
+
+  /* GENRES / FRANJAS */
+  section{ padding:90px 6%; }
+  .section-head{ text-align:center; max-width:600px; margin:0 auto 48px; }
+  .section-head .kicker{
+    font-family:'Share Tech Mono', monospace; color:var(--gold);
+    font-size:.75rem; letter-spacing:.3em; text-transform:uppercase;
+  }
+  .section-head h2{
+    font-family:'Oswald', sans-serif; font-weight:600; text-transform:uppercase;
+    font-size:clamp(1.8rem, 4vw, 2.6rem); margin-top:12px;
+  }
+  .section-head p{ color:var(--ash); margin-top:14px; line-height:1.6; }
+
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:20px; max-width:1000px; margin:0 auto;
+  }
+  .card{
+    background:linear-gradient(180deg, rgba(255,106,43,.06), rgba(255,255,255,.02));
+    border:1px solid rgba(242,169,59,.16);
+    border-radius:16px; padding:26px 22px;
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .card:hover{ transform:translateY(-4px); border-color:rgba(242,169,59,.4); }
+  .card .num{ font-family:'Share Tech Mono', monospace; color:var(--ember-2); font-size:.85rem; }
+  .card h3{ font-family:'Oswald', sans-serif; text-transform:uppercase; font-size:1.15rem; margin:10px 0 8px; letter-spacing:.03em; }
+  .card p{ color:var(--ash); font-size:.9rem; line-height:1.55; }
+
+  /* CONTACT */
+  .contact{
+    display:flex; flex-wrap:wrap; gap:16px; justify-content:center;
+  }
+  .social{
+    display:flex; align-items:center; gap:10px;
+    padding:14px 22px; border-radius:999px;
+    border:1px solid rgba(242,169,59,.25);
+    color:var(--cream); text-decoration:none; font-size:.9rem;
+    letter-spacing:.03em;
+    transition:background .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .social:hover{ background:rgba(255,106,43,.12); border-color:var(--ember-2); transform:translateY(-2px); }
+  .social svg{ width:18px; height:18px; fill:var(--ember-2); }
+
+  footer{
+    text-align:center; padding:40px 6% 50px; color:var(--ash); font-size:.8rem;
+    border-top:1px solid rgba(242,169,59,.1);
+  }
+  footer .brand-name{ margin-bottom:8px; justify-content:center; display:flex; }
+
+  @media (max-width:520px){
+    nav{ display:none; }
+    .tuner{ padding:18px 16px 14px; }
+  }
+
+  :focus-visible{ outline:2px solid var(--gold); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+<div class="glow-field"></div>
+<div class="grain"></div>
+
+<header>
+  <div class="brand">
+    <img src="logo.png" alt="Logo FENIX FM Latino">
+    <div class="brand-name">FENIX<span>FM</span> Latino</div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="#inicio">Inicio</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="inicio">
+    <div class="eyebrow"><span class="live-dot"></span> Transmitiendo en vivo</div>
+    <div class="logo-wrap">
+      <img class="station-logo" src="logo.png" alt="FENIX FM Latino">
+    </div>
+    <h1>Fenix <span class="fm">FM</span> Latino</h1>
+    <p class="tagline">La radio que renace todos los días. Ritmo latino, historias que emocionan y la mejor compañía las 24 horas, todo el año.</p>
+
+    <div class="tuner">
+      <div class="lcd">
+        <div class="lcd-row">
+          <span class="lcd-station">FENIX · FM</span>
+          <span class="lcd-status" id="statusText">● OFF AIR</span>
+        </div>
+        <div class="lcd-ticker">
+          <span>FENIX FM LATINO &nbsp;·&nbsp; TU RADIO LATINA &nbsp;·&nbsp; 24 HORAS, 7 DÍAS &nbsp;·&nbsp; SIEMPRE PRENDIDA &nbsp;·&nbsp; FENIX FM LATINO &nbsp;·&nbsp; TU RADIO LATINA &nbsp;·&nbsp; 24 HORAS, 7 DÍAS &nbsp;·&nbsp;</span>
+        </div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="controls">
+        <button class="play-btn" id="playBtn" aria-label="Reproducir radio en vivo">
+          <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+        </button>
+        <div class="vol-wrap">
+          <label for="vol">VOL</label>
+          <input type="range" id="vol" min="0" max="100" value="80">
+        </div>
+      </div>
+      <p class="hint">Tocá play para escuchar FENIX FM Latino en vivo</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="brand-name">FENIX<span style="color:var(--ember-2)">FM</span>&nbsp;Latino</div>
+  <p>&copy; <span id="year"></span> Fenix FM Latino — Todos los derechos reservados.</p>
+</footer>
+
+<audio id="radio" preload="none" src="https://uk14freenew.listen2myradio.com/live.mp3?typeportmount=s2_37351_stream_549864198"></audio>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// build equalizer bars
+const barsWrap = document.getElementById('bars');
+const BAR_COUNT = 42;
+for(let i=0;i<BAR_COUNT;i++){
+  const b = document.createElement('i');
+  barsWrap.appendChild(b);
+}
+const barEls = barsWrap.querySelectorAll('i');
+
+const audio = document.getElementById('radio');
+const playBtn = document.getElementById('playBtn');
+const playIcon = document.getElementById('playIcon');
+const pauseIcon = document.getElementById('pauseIcon');
+const statusText = document.getElementById('statusText');
+const vol = document.getElementById('vol');
+
+audio.volume = vol.value/100;
+vol.addEventListener('input', ()=>{ audio.volume = vol.value/100; });
+
+let animId = null;
+function animateBars(){
+  barEls.forEach(b=>{
+    const h = 10 + Math.random()*90;
+    b.style.height = h+'%';
+  });
+  animId = requestAnimationFrame(loopBars);
+}
+let last = 0;
+function loopBars(t){
+  if(t - last > 90){ // throttle for a chunkier retro feel
+    barEls.forEach(b=>{ b.style.height = (8 + Math.random()*92)+'%'; });
+    last = t;
+  }
+  animId = requestAnimationFrame(loopBars);
+}
+function stopBars(){
+  cancelAnimationFrame(animId);
+  barEls.forEach(b=>{ b.style.height = '8%'; });
+}
+
+let isPlaying = false;
+playBtn.addEventListener('click', ()=>{
+  if(!isPlaying){
+    statusText.textContent = '● CONECTANDO...';
+    audio.play().then(()=>{
+      isPlaying = true;
+      playIcon.style.display = 'none';
+      pauseIcon.style.display = 'block';
+      statusText.textContent = '● EN VIVO';
+      loopBars(0);
+    }).catch(()=>{
+      statusText.textContent = '● ERROR DE SEÑAL';
+    });
+  } else {
+    audio.pause();
+    isPlaying = false;
+    playIcon.style.display = 'block';
+    pauseIcon.style.display = 'none';
+    statusText.textContent = '● OFF AIR';
+    stopBars();
+  }
+});
+
+audio.addEventListener('waiting', ()=>{ statusText.textContent = '● BUFFERING...'; });
+audio.addEventListener('playing', ()=>{ statusText.textContent = '● EN VIVO'; });
+audio.addEventListener('error', ()=>{ statusText.textContent = '● ERROR DE SEÑAL'; stopBars(); isPlaying=false; playIcon.style.display='block'; pauseIcon.style.display='none'; });
+</script>
+
+</body>
+</html>
