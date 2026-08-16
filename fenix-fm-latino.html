@@ -10,9 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0a0908;
-    --bg-2:#141210;
-    --panel:#17140f;
+    --bg:#050403;
+    --bg-2:#0f0906;
+    --panel:#130c09;
     --panel-line:rgba(255,255,255,.08);
     --ember:#ff5a1f;
     --gold:#ffb545;
@@ -38,9 +38,10 @@
   .ambience{
     position:fixed; inset:0; z-index:0; pointer-events:none;
     background:
-      radial-gradient(900px 500px at 20% -5%, rgba(255,90,31,.14), transparent 60%),
-      radial-gradient(700px 600px at 90% 15%, rgba(224,20,44,.10), transparent 60%),
-      radial-gradient(800px 500px at 50% 105%, rgba(255,181,69,.08), transparent 60%);
+      radial-gradient(1000px 560px at 18% -8%, rgba(255,90,31,.20), transparent 60%),
+      radial-gradient(800px 700px at 95% 10%, rgba(224,20,44,.22), transparent 58%),
+      radial-gradient(900px 600px at 50% 108%, rgba(255,181,69,.12), transparent 60%),
+      radial-gradient(1200px 800px at 50% 40%, rgba(20,10,8,.4), transparent 70%);
   }
 
   header, main, footer, .player{ position:relative; z-index:2; }
@@ -163,7 +164,7 @@
   footer{
     max-width:1280px; margin:0 auto;
     padding:32px clamp(20px,6vw,64px) 40px;
-    display:flex; align-items:center; justify-content:space-between;
+    display:flex; align-items:center; justify-content:center;
     border-top:1px solid var(--panel-line);
     color:var(--text-faint); font-size:.82rem;
   }
@@ -315,7 +316,6 @@
 
 <footer>
   <div class="brand">© <span id="year"></span> Fenix FM Latino</div>
-  <div>Hecho con 🔥</div>
 </footer>
 
 <div class="player">
@@ -354,7 +354,7 @@
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const STREAM_URL = "https://uk14freenew.listen2myradio.com/live.mp3?typeportmount=s2_37351_stream_637348750";
+const STREAM_URL = "https://uk14freenew.listen2myradio.com/live.mp3?typeportmount=s2_37351_stream_549864198";
 
 const audio = document.getElementById('radio');
 const playBtn = document.getElementById('playBtn');
@@ -391,7 +391,12 @@ function stopWave(){
 }
 
 audio.volume = vol.value/100;
-vol.addEventListener('input', ()=>{ audio.volume = vol.value/100; });
+function paintVol(){
+  const v = vol.value;
+  vol.style.background = `linear-gradient(90deg, var(--ember) 0%, var(--ember) ${v}%, rgba(255,255,255,.12) ${v}%, rgba(255,255,255,.12) 100%)`;
+}
+paintVol();
+vol.addEventListener('input', ()=>{ audio.volume = vol.value/100; paintVol(); });
 
 let state = 'paused';
 
