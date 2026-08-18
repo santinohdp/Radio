@@ -344,7 +344,7 @@
           <svg id="heroPauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
           <span id="heroPlayLabel">Iniciar transmisión</span>
         </button>
-        <span class="stream-note mono">STREAM://FENIX-RADIO-PROXY.ONRENDER.COM</span>
+        <span class="stream-note mono">DIRECT + PROXY · FALLBACK AUTO</span>
       </div>
     </div>
     <div class="hero-visual">
@@ -451,10 +451,14 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }
 })();
 
-// El proxy HTTPS propio (Render) re-transmite el stream ShoutCast HTTP
-// como HTTPS, evitando el bloqueo de contenido mixto en páginas HTTPS
-// como GitHub Pages.
-const STREAM_URL = "https://fenix-radio-proxy.onrender.com/radio-stream";
+// Dos fuentes disponibles: el stream directo (HTTP) y el proxy propio
+// (HTTPS, vía Render). Se intenta la primera; si falla (por bloqueo de
+// contenido mixto u otro motivo), se pasa automáticamente a la siguiente.
+const STREAM_URLS = [
+  "http://109.169.15.21:37351/stream",
+  "https://fenix-radio-proxy.onrender.com/radio-stream"
+];
+let streamIndex = 0;
 
 const audio = document.getElementById('radio');
 const playBtn = document.getElementById('playBtn');
@@ -551,9 +555,20 @@ function setState(next, msg){
 
 function playRadio(){
   setState('loading');
-  audio.src = STREAM_URL + (STREAM_URL.includes('?') ? '&' : '?') + '_=' + Date.now();
+  const url = STREAM_URLS[streamIndex];
+  audio.src = url + (url.includes('?') ? '&' : '?') + '_=' + Date.now();
   audio.load();
-  audio.play().catch(()=>{ setState('error'); });
+  audio.play().catch(()=>{ handleStreamFailure(); });
+}
+
+function handleStreamFailure(){
+  if(streamIndex < STREAM_URLS.length - 1){
+    streamIndex++;
+    playRadio();
+  } else {
+    streamIndex = 0;
+    setState('error');
+  }
 }
 
 function pauseRadio(){
@@ -571,14 +586,14 @@ function toggle(){
 
 playBtn.addEventListener('click', toggle);
 heroPlay.addEventListener('click', toggle);
-retryBtn.addEventListener('click', (e)=>{ e.stopPropagation(); playRadio(); });
+retryBtn.addEventListener('click', (e)=>{ e.stopPropagation(); streamIndex = 0; playRadio(); });
 
 audio.addEventListener('playing', ()=> setState('playing'));
 audio.addEventListener('waiting', ()=>{ if(state !== 'paused') setState('loading'); });
 audio.addEventListener('pause', ()=>{ if(state === 'playing') setState('paused'); });
 audio.addEventListener('stalled', ()=>{ if(state === 'playing') setState('loading'); });
-audio.addEventListener('error', ()=>{ setState('error'); });
-audio.addEventListener('ended', ()=>{ setState('error'); });
+audio.addEventListener('error', ()=>{ handleStreamFailure(); });
+audio.addEventListener('ended', ()=>{ handleStreamFailure(); });
 
 setState('paused');
 </script>
