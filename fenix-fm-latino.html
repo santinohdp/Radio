@@ -451,11 +451,14 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }
 })();
 
-// The stream is served over plain HTTP. If this page is loaded over HTTPS,
-// browsers block that as mixed content, so we detect it and warn instead of
-// silently failing.
-const STREAM_URL = "http://109.169.15.21:37351/stream";
-const isMixedContent = window.location.protocol === 'https:' && STREAM_URL.startsWith('http:');
+// The direct stream is served over plain HTTP. If this page is loaded over
+// HTTPS (e.g. GitHub Pages), browsers block that as mixed content — so we
+// try the direct URL first, and if it's blocked, fall back automatically
+// to the Listen2MyRadio HTTPS relay for the same stream.
+const STREAM_URL_DIRECT = "http://109.169.15.21:37351/stream";
+const STREAM_URL_HTTPS = "https://uk14freenew.listen2myradio.com/live.mp3?typeportmount=s2_37351_stream_549864198";
+const isMixedContent = window.location.protocol === 'https:' && STREAM_URL_DIRECT.startsWith('http:');
+const STREAM_URL = isMixedContent ? STREAM_URL_HTTPS : STREAM_URL_DIRECT;
 
 const audio = document.getElementById('radio');
 const playBtn = document.getElementById('playBtn');
@@ -551,10 +554,6 @@ function setState(next, msg){
 }
 
 function playRadio(){
-  if(isMixedContent){
-    setState('error', 'Bloqueado: HTTP en página HTTPS');
-    return;
-  }
   setState('loading');
   audio.src = STREAM_URL + (STREAM_URL.includes('?') ? '&' : '?') + '_=' + Date.now();
   audio.load();
@@ -585,7 +584,7 @@ audio.addEventListener('stalled', ()=>{ if(state === 'playing') setState('loadin
 audio.addEventListener('error', ()=>{ setState('error'); });
 audio.addEventListener('ended', ()=>{ setState('error'); });
 
-setState(isMixedContent ? 'error' : 'paused', isMixedContent ? 'Bloqueado: HTTP en página HTTPS' : undefined);
+setState('paused');
 </script>
 
 </body>
