@@ -344,7 +344,7 @@
           <svg id="heroPauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
           <span id="heroPlayLabel">Iniciar transmisión</span>
         </button>
-        <span class="stream-note mono">STREAM://109.169.15.21:37351</span>
+        <span class="stream-note mono">STREAM://FENIX-RADIO-PROXY.ONRENDER.COM</span>
       </div>
     </div>
     <div class="hero-visual">
@@ -421,7 +421,7 @@
 </div>
 
 <audio id="radio" preload="none">
-  <source src="http://109.169.15.21:37351/stream" type="audio/mpeg">
+  <source src="https://fenix-radio-proxy.onrender.com/radio-stream" type="audio/mpeg">
 </audio>
 
 <script>
@@ -451,14 +451,10 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }
 })();
 
-// The direct stream is served over plain HTTP. If this page is loaded over
-// HTTPS (e.g. GitHub Pages), browsers block that as mixed content — so we
-// try the direct URL first, and if it's blocked, fall back automatically
-// to the Listen2MyRadio HTTPS relay for the same stream.
-const STREAM_URL_DIRECT = "http://109.169.15.21:37351/stream";
-const STREAM_URL_HTTPS = "https://uk14freenew.listen2myradio.com/live.mp3?typeportmount=s2_37351_stream_549864198";
-const isMixedContent = window.location.protocol === 'https:' && STREAM_URL_DIRECT.startsWith('http:');
-const STREAM_URL = isMixedContent ? STREAM_URL_HTTPS : STREAM_URL_DIRECT;
+// El proxy HTTPS propio (Render) re-transmite el stream ShoutCast HTTP
+// como HTTPS, evitando el bloqueo de contenido mixto en páginas HTTPS
+// como GitHub Pages.
+const STREAM_URL = "https://fenix-radio-proxy.onrender.com/radio-stream";
 
 const audio = document.getElementById('radio');
 const playBtn = document.getElementById('playBtn');
